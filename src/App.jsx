@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import Machines from './pages/Machines';
 import Parts from './pages/Parts';
 import Tasks from './pages/Tasks';
+import Employees from './pages/Employees';
 import { getCollectionSnapshot, updateDocument } from './api/firestoreService';
 
 function App() {
@@ -49,7 +50,8 @@ function App() {
         <Route path="/" element={<Dashboard role={role} />} />
         <Route path="/machines" element={<Machines machines={machines} setMachines={setMachines} />} />
         <Route path="/parts" element={<Parts parts={parts} setParts={setParts} machines={machines} />} />
-        <Route path="/tasks" element={<Tasks tasks={tasks} machines={machines} parts={parts} onCompleteTask={handleCompleteTask} onRateTask={handleTaskRatingChange} />} />
+        <Route path="/tasks" element={<Tasks tasks={tasks} setTasks={setTasks} machines={machines} parts={parts} onCompleteTask={handleCompleteTask} onRateTask={handleTaskRatingChange} />} />
+        <Route path="/employees" element={<Employees />} />
       </Routes>
     </div>
   );
