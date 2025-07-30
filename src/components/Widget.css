@@ -1,0 +1,30 @@
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.widget {
+  background-color: var(--widget-background);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--widget-border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  animation: fadeInSlideUp 0.5s ease-out forwards;
+}
+
+.widget-header {
+  margin-bottom: 1rem;
+}
+
+.widget-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+}

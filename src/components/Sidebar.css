@@ -1,0 +1,88 @@
+.sidebar {
+  width: 260px;
+  background-color: var(--sidebar-background);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.5rem;
+  border-right: 1px solid var(--border-color);
+}
+
+.sidebar-header .logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 3rem;
+}
+
+.sidebar-header .logo svg {
+  margin-right: 10px;
+  color: #4a90e2;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.sidebar-nav li a {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  color: #718096;
+  text-decoration: none;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar-nav li a:hover,
+.sidebar-nav li a.active {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.sidebar-nav li a svg {
+  margin-right: 1rem;
+  font-size: 1.2rem;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+}
+
+.sidebar-footer a {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  color: #718096;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.sidebar-footer a:hover {
+  background-color: #e2e8f0;
+}
+
+.role-switcher, .theme-switcher {
+  margin-bottom: 1rem;
+}
+
+.role-switcher select, .theme-switcher select {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #cbd5e0;
+  background-color: #ffffff;
+}
+
+.sidebar-footer a svg {
+  margin-right: 1rem;
+  font-size: 1.2rem;
+}

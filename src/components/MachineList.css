@@ -1,0 +1,82 @@
+.machine-list-container {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #e9e9e9;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.machine-list-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.machine-list-table th,
+.machine-list-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e9e9e9;
+}
+
+.machine-list-table tbody tr {
+  border-bottom: 1px solid #e9e9e9;
+  transition: background-color 0.2s;
+}
+
+.machine-list-table tbody tr:hover {
+  background-color: #f7fafc;
+}
+
+.machine-list-table th {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #718096;
+  text-transform: uppercase;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.status-operational {
+  background-color: #c6f6d5;
+  color: #2f855a;
+}
+
+.status-needs-maintenance {
+  background-color: #feebc8;
+  color: #975a16;
+}
+
+.status-offline {
+  background-color: #fed7d7;
+  color: #9b2c2c;
+}
+
+.action-button {
+  background-color: #edf2f7;
+  color: #2d3748;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.action-button:hover {
+  background-color: #e2e8f0;
+}
+
+.action-button.delete {
+  background-color: #fed7d7;
+  color: #9b2c2c;
+}
+
+.action-button.delete:hover {
+  background-color: #fbb6b6;
+}
