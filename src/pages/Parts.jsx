@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { addDocument, updateDocument, deleteDocument } from '../api/firestoreService';
 import './Parts.css';
 import PartList from '../components/PartList';
 import Modal from '../components/Modal';
 import PartForm from '../components/PartForm';
 
-const Parts = ({ parts, setParts, machines }) => {
+const Parts = ({ parts, machines }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPart, setSelectedPart] = useState(null);
 
@@ -18,21 +19,18 @@ const Parts = ({ parts, setParts, machines }) => {
     setIsModalOpen(false);
   };
 
-  const handleFormSubmit = (formData) => {
+  const handleFormSubmit = async (formData) => {
     if (selectedPart) {
-      // Update existing part
-      setParts(parts.map(p => p.id === selectedPart.id ? { ...p, ...formData } : p));
+      await updateDocument('parts', selectedPart.id, formData);
     } else {
-      // Add new part
-      const newPart = { ...formData, id: `P${Date.now()}` };
-      setParts([...parts, newPart]);
+      await addDocument('parts', formData);
     }
     handleCloseModal();
   };
 
-  const handleDelete = (partId) => {
+  const handleDelete = async (partId) => {
     if (window.confirm('Are you sure you want to delete this part?')) {
-      setParts(parts.filter(p => p.id !== partId));
+      await deleteDocument('parts', partId);
     }
   };
 

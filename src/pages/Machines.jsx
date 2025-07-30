@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { addDocument, updateDocument, deleteDocument } from '../api/firestoreService';
 import './Machines.css';
 import MachineList from '../components/MachineList';
 import Modal from '../components/Modal';
 import MachineForm from '../components/MachineForm';
 
-const Machines = ({ machines, setMachines }) => {
+const Machines = ({ machines }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMachine, setSelectedMachine] = useState(null);
 
@@ -18,20 +19,17 @@ const Machines = ({ machines, setMachines }) => {
     setIsModalOpen(false);
   };
 
-    const handleDelete = (machineId) => {
+  const handleDelete = async (machineId) => {
     if (window.confirm('Are you sure you want to delete this machine?')) {
-      setMachines(machines.filter(m => m.id !== machineId));
+      await deleteDocument('machines', machineId);
     }
   };
 
-  const handleFormSubmit = (formData) => {
+  const handleFormSubmit = async (formData) => {
     if (selectedMachine) {
-      // Update existing machine
-      setMachines(machines.map(m => m.id === selectedMachine.id ? { ...m, ...formData } : m));
+      await updateDocument('machines', selectedMachine.id, formData);
     } else {
-      // Add new machine
-      const newMachine = { ...formData, id: `M${Date.now()}` };
-      setMachines([...machines, newMachine]);
+      await addDocument('machines', formData);
     }
     handleCloseModal();
   };
@@ -39,14 +37,24 @@ const Machines = ({ machines, setMachines }) => {
   return (
     <div className="machines-page">
       <div className="page-header">
-        <h2>Machine Management</h2>
-        <button className="add-new-button" onClick={() => handleOpenModal()}>+ Add New Machine</button>
+        <h1>Machine Management</h1>
+        <button className="add-button" onClick={() => handleOpenModal()}>
+          Add Machine
+        </button>
       </div>
-      <MachineList machines={machines} onEdit={handleOpenModal} onDelete={handleDelete} />
-
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal} title={selectedMachine ? 'Edit Machine' : 'Add New Machine'}>
-        <MachineForm onSubmit={handleFormSubmit} machine={selectedMachine} />
-      </Modal>
+      <MachineList 
+        machines={machines} 
+        onEdit={handleOpenModal} 
+        onDelete={handleDelete} 
+      />
+      {isModalOpen && (
+        <Modal onClose={handleCloseModal}>
+          <MachineForm 
+            onSubmit={handleFormSubmit} 
+            initialData={selectedMachine}
+          />
+        </Modal>
+      )}
     </div>
   );
 };
