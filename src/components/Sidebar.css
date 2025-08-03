@@ -1,6 +1,6 @@
 /* Sidebar Container */
 .sidebar {
-  width: 280px;
+  width: 100%;
   background: var(--sidebar-background);
   height: 100vh;
   display: flex;
@@ -12,8 +12,26 @@
   -webkit-backdrop-filter: blur(20px);
   background: rgba(255, 255, 255, 0.9);
   box-shadow: var(--shadow-lg);
-  transition: all var(--transition-normal) var(--ease-smooth);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar for sidebar */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }
 
 .sidebar::before {
@@ -27,10 +45,7 @@
   opacity: 0.3;
 }
 
-.sidebar:hover {
-  transform: translateX(5px);
-  box-shadow: var(--shadow-xl);
-}
+
 
 /* Sidebar Header */
 .sidebar-header {
@@ -260,16 +275,13 @@
   .sidebar {
     width: 100%;
     height: auto;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
+    position: relative;
     border-right: none;
     border-top: 1px solid var(--border-color);
     padding: 1rem;
     backdrop-filter: blur(20px);
     background: rgba(255, 255, 255, 0.95);
+    overflow: visible;
   }
 
   .sidebar-header {

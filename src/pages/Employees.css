@@ -1,7 +1,6 @@
 /* Employees Page */
 .employees-page {
   flex-grow: 1;
-  padding: 2rem 3rem;
   background: transparent;
   position: relative;
   overflow: hidden;
@@ -33,7 +32,7 @@
 }
 
 /* Page Header */
-.page-header {
+.employees-page .page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -47,7 +46,6 @@
   -webkit-backdrop-filter: blur(20px);
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all var(--transition-normal) var(--ease-smooth);
   overflow: hidden;
 }
 
@@ -62,10 +60,7 @@
   opacity: 0.8;
 }
 
-.page-header:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-xl);
-}
+
 
 .header-content h1 {
   font-size: 2rem;

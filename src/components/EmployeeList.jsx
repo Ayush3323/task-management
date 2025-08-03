@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { FiEdit, FiTrash2, FiUser, FiMail, FiPhone, FiMapPin, FiBriefcase, FiCalendar, FiEye } from 'react-icons/fi';
+import { FiEdit, FiTrash2, FiUser, FiMail, FiPhone, FiMapPin, FiBriefcase, FiCalendar, FiEye, FiSearch } from 'react-icons/fi';
 import './EmployeeList.css';
 
 const EmployeeList = ({ employees, onEdit, onDelete }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('All');
   const [filterStatus, setFilterStatus] = useState('All');
-  const [sortBy, setSortBy] = useState('name');
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [viewMode, setViewMode] = useState('table'); // 'table' or 'grid'
 
   // Filter and sort employees
   const filteredEmployees = employees
@@ -20,68 +19,25 @@ const EmployeeList = ({ employees, onEdit, onDelete }) => {
       
       return matchesSearch && matchesRole && matchesStatus;
     })
-    .sort((a, b) => {
-      let aValue, bValue;
-      
-      switch (sortBy) {
-        case 'name':
-          aValue = a.fullName || '';
-          bValue = b.fullName || '';
-          break;
-        case 'role':
-          aValue = a.role || '';
-          bValue = b.role || '';
-          break;
-        case 'department':
-          aValue = a.department || '';
-          bValue = b.department || '';
-          break;
-        case 'status':
-          aValue = a.status || '';
-          bValue = b.status || '';
-          break;
-        case 'hireDate':
-          aValue = new Date(a.hireDate || 0);
-          bValue = new Date(b.hireDate || 0);
-          break;
-        default:
-          aValue = a.fullName || '';
-          bValue = b.fullName || '';
-      }
-      
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
-
-  const handleSort = (field) => {
-    if (sortBy === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(field);
-      setSortOrder('asc');
-    }
-  };
+    .sort((a, b) => (a.fullName || '').localeCompare(b.fullName || ''));
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Active': return 'var(--success-color)';
-      case 'Inactive': return 'var(--text-muted)';
-      case 'On Leave': return 'var(--warning-color)';
-      case 'Terminated': return 'var(--error-color)';
-      default: return 'var(--text-muted)';
+      case 'Active': return '#10b981';
+      case 'Inactive': return '#6b7280';
+      case 'On Leave': return '#f59e0b';
+      case 'Terminated': return '#ef4444';
+      default: return '#6b7280';
     }
   };
 
   const getRoleColor = (role) => {
     switch (role) {
-      case 'Admin': return 'var(--error-color)';
-      case 'Manager': return 'var(--warning-color)';
-      case 'Supervisor': return 'var(--info-color)';
-      case 'Employee': return 'var(--success-color)';
-      default: return 'var(--text-muted)';
+      case 'Admin': return '#ef4444';
+      case 'Manager': return '#f59e0b';
+      case 'Supervisor': return '#3b82f6';
+      case 'Employee': return '#10b981';
+      default: return '#6b7280';
     }
   };
 
@@ -90,21 +46,37 @@ const EmployeeList = ({ employees, onEdit, onDelete }) => {
     return new Date(dateString).toLocaleDateString();
   };
 
-  const formatSalary = (salary) => {
-    if (!salary) return 'N/A';
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(salary);
-  };
-
   return (
     <div className="employee-list-container">
-      {/* Filters and Search */}
-      <div className="list-controls">
-        <div className="search-section">
+      {/* Header Controls */}
+      <div className="list-header">
+        <div className="header-left">
+          <h2 className="page-title">Employees</h2>
+          <span className="employee-count">{filteredEmployees.length} employee{filteredEmployees.length !== 1 ? 's' : ''}</span>
+        </div>
+        <div className="header-right">
+          <div className="view-toggle">
+            <button 
+              className={`toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
+              onClick={() => setViewMode('table')}
+            >
+              Table
+            </button>
+            <button 
+              className={`toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
+              onClick={() => setViewMode('grid')}
+            >
+              Grid
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Search and Filters */}
+      <div className="controls-section">
+        <div className="search-container">
           <div className="search-box">
-            <FiUser className="search-icon" />
+            <FiSearch className="search-icon" />
             <input
               type="text"
               placeholder="Search employees..."
@@ -115,7 +87,7 @@ const EmployeeList = ({ employees, onEdit, onDelete }) => {
           </div>
         </div>
         
-        <div className="filter-section">
+        <div className="filters-container">
           <div className="filter-group">
             <label>Role:</label>
             <select value={filterRole} onChange={(e) => setFilterRole(e.target.value)}>
@@ -140,109 +112,76 @@ const EmployeeList = ({ employees, onEdit, onDelete }) => {
         </div>
       </div>
 
-      {/* Results Count */}
-      <div className="results-info">
-        <span>{filteredEmployees.length} employee{filteredEmployees.length !== 1 ? 's' : ''} found</span>
-      </div>
+      {/* Employee Table/Grid */}
+      <div className={`employees-container ${viewMode}`}>
+        {viewMode === 'table' ? (
+          <>
+            {/* Table Header */}
+            <div className="table-header">
+              <div className="header-cell employee-cell">Employee</div>
+              <div className="header-cell role-cell">Role</div>
+              <div className="header-cell department-cell">Department</div>
+              <div className="header-cell status-cell">Status</div>
+              <div className="header-cell date-cell">Hire Date</div>
+              <div className="header-cell contact-cell">Contact</div>
+              <div className="header-cell actions-cell">Actions</div>
+            </div>
 
-      {/* Employee Table */}
-      <div className="table-container">
-        <table className="employee-table">
-          <thead>
-            <tr>
-              <th onClick={() => handleSort('name')} className="sortable">
-                Employee
-                {sortBy === 'name' && (
-                  <span className="sort-indicator">{sortOrder === 'asc' ? '↑' : '↓'}</span>
-                )}
-              </th>
-              <th onClick={() => handleSort('role')} className="sortable">
-                Role
-                {sortBy === 'role' && (
-                  <span className="sort-indicator">{sortOrder === 'asc' ? '↑' : '↓'}</span>
-                )}
-              </th>
-              <th onClick={() => handleSort('department')} className="sortable">
-                Department
-                {sortBy === 'department' && (
-                  <span className="sort-indicator">{sortOrder === 'asc' ? '↑' : '↓'}</span>
-                )}
-              </th>
-              <th onClick={() => handleSort('status')} className="sortable">
-                Status
-                {sortBy === 'status' && (
-                  <span className="sort-indicator">{sortOrder === 'asc' ? '↑' : '↓'}</span>
-                )}
-              </th>
-              <th onClick={() => handleSort('hireDate')} className="sortable">
-                Hire Date
-                {sortBy === 'hireDate' && (
-                  <span className="sort-indicator">{sortOrder === 'asc' ? '↑' : '↓'}</span>
-                )}
-              </th>
-              <th>Contact</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+            {/* Table Rows */}
             {filteredEmployees.map((employee) => (
-              <tr key={employee.id} className="employee-row">
-                <td className="employee-info">
-                  <div className="employee-avatar">
-                    <FiUser />
+              <div key={employee.id} className="table-row">
+                <div className="table-cell employee-cell">
+                  <div className="employee-info">
+                    <div className="employee-avatar">
+                      <FiUser />
+                    </div>
+                    <div className="employee-details">
+                      <h4 className="employee-name">{employee.fullName || 'N/A'}</h4>
+                      <p className="employee-email">{employee.email || 'N/A'}</p>
+                    </div>
                   </div>
-                  <div className="employee-details">
-                    <div className="employee-name">{employee.fullName || 'N/A'}</div>
-                    <div className="employee-email">{employee.email || 'N/A'}</div>
-                  </div>
-                </td>
+                </div>
                 
-                <td>
+                <div className="table-cell role-cell">
                   <span 
                     className="role-badge"
                     style={{ backgroundColor: getRoleColor(employee.role) }}
                   >
                     {employee.role || 'N/A'}
                   </span>
-                </td>
+                </div>
                 
-                <td>
+                <div className="table-cell department-cell">
                   <div className="department-info">
-                    <FiBriefcase className="department-icon" />
+                    <FiBriefcase className="info-icon" />
                     <span>{employee.department || 'N/A'}</span>
                   </div>
-                </td>
+                </div>
                 
-                <td>
+                <div className="table-cell status-cell">
                   <span 
                     className="status-badge"
                     style={{ backgroundColor: getStatusColor(employee.status) }}
                   >
                     {employee.status || 'N/A'}
                   </span>
-                </td>
+                </div>
                 
-                <td>
+                <div className="table-cell date-cell">
                   <div className="date-info">
-                    <FiCalendar className="date-icon" />
+                    <FiCalendar className="info-icon" />
                     <span>{formatDate(employee.hireDate)}</span>
                   </div>
-                </td>
+                </div>
                 
-                <td className="contact-info">
-                  <div className="contact-item">
-                    <FiPhone className="contact-icon" />
+                <div className="table-cell contact-cell">
+                  <div className="contact-info">
+                    <FiPhone className="info-icon" />
                     <span>{employee.phone || 'N/A'}</span>
                   </div>
-                  {employee.address && (
-                    <div className="contact-item">
-                      <FiMapPin className="contact-icon" />
-                      <span className="address-text">{employee.address}</span>
-                    </div>
-                  )}
-                </td>
+                </div>
                 
-                <td className="actions">
+                <div className="table-cell actions-cell">
                   <div className="action-buttons">
                     <button 
                       className="action-btn view-btn" 
@@ -266,16 +205,103 @@ const EmployeeList = ({ employees, onEdit, onDelete }) => {
                       <FiTrash2 />
                     </button>
                   </div>
-                </td>
-              </tr>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </>
+        ) : (
+          // Grid View (existing card structure)
+          filteredEmployees.map((employee) => (
+            <div key={employee.id} className="employee-card">
+              <div className="card-header">
+                <div className="employee-avatar">
+                  <FiUser />
+                </div>
+                <div className="employee-basic-info">
+                  <h3 className="employee-name">{employee.fullName || 'N/A'}</h3>
+                  <p className="employee-email">{employee.email || 'N/A'}</p>
+                </div>
+              </div>
+              
+              <div className="card-content">
+                <div className="info-row">
+                  <div className="info-item">
+                    <span className="info-label">Role:</span>
+                    <span 
+                      className="role-badge"
+                      style={{ backgroundColor: getRoleColor(employee.role) }}
+                    >
+                      {employee.role || 'N/A'}
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Status:</span>
+                    <span 
+                      className="status-badge"
+                      style={{ backgroundColor: getStatusColor(employee.status) }}
+                    >
+                      {employee.status || 'N/A'}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="info-row">
+                  <div className="info-item">
+                    <FiBriefcase className="info-icon" />
+                    <span className="info-text">{employee.department || 'N/A'}</span>
+                  </div>
+                  <div className="info-item">
+                    <FiCalendar className="info-icon" />
+                    <span className="info-text">{formatDate(employee.hireDate)}</span>
+                  </div>
+                </div>
+                
+                <div className="info-row">
+                  <div className="info-item">
+                    <FiPhone className="info-icon" />
+                    <span className="info-text">{employee.phone || 'N/A'}</span>
+                  </div>
+                  {employee.address && (
+                    <div className="info-item">
+                      <FiMapPin className="info-icon" />
+                      <span className="info-text address-text">{employee.address}</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="card-actions">
+                  <button 
+                    className="action-btn view-btn" 
+                    title="View Details"
+                    onClick={() => onEdit(employee)}
+                  >
+                    <FiEye />
+                  </button>
+                  <button 
+                    className="action-btn edit-btn" 
+                    title="Edit Employee"
+                    onClick={() => onEdit(employee)}
+                  >
+                    <FiEdit />
+                  </button>
+                  <button 
+                    className="action-btn delete-btn" 
+                    title="Delete Employee"
+                    onClick={() => onDelete(employee.id)}
+                  >
+                    <FiTrash2 />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
         
         {filteredEmployees.length === 0 && (
           <div className="no-results">
             <FiUser className="no-results-icon" />
-            <p>No employees found matching your criteria</p>
+            <h3>No employees found</h3>
+            <p>Try adjusting your search or filter criteria</p>
           </div>
         )}
       </div>

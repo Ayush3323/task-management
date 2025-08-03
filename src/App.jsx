@@ -45,7 +45,10 @@ function App() {
 
   return (
     <div className="app-container">
-      <Sidebar setRole={setRole} />
+      <div className="sidebar-container">
+        <Sidebar setRole={setRole} />
+      </div>
+      <div className="main-content">
       <Routes>
         <Route path="/" element={<Dashboard role={role} />} />
         <Route path="/machines" element={<Machines machines={machines} setMachines={setMachines} />} />
@@ -53,6 +56,7 @@ function App() {
         <Route path="/tasks" element={<Tasks tasks={tasks} setTasks={setTasks} machines={machines} parts={parts} onCompleteTask={handleCompleteTask} onRateTask={handleTaskRatingChange} />} />
         <Route path="/employees" element={<Employees />} />
       </Routes>
+      </div>
     </div>
   );
 }
