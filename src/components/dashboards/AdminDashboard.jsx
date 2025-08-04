@@ -97,7 +97,7 @@ const AdminDashboard = ({ userData }) => {
   return (
     <div className="dashboard-grid">
       {/* Maintenance Overview Cards - Similar to client images */}
-      <div className="maintenance-overview">
+      {/* <div className="maintenance-overview">
         {plantCategories.map((plant) => (
           <Widget key={plant.id} className="plant-card" title={plant.name}>
             <div className="plant-card-content">
@@ -110,7 +110,7 @@ const AdminDashboard = ({ userData }) => {
             </div>
           </Widget>
         ))}
-      </div>
+      </div> */}
 
       {/* Key Metrics Row */}
       <Widget className="widget-primary" title={`System Overview - ${userData?.fullName || 'Administrator'}`}>
