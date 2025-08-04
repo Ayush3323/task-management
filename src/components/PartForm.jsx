@@ -10,11 +10,27 @@ const PartForm = ({ onSubmit, part, machines }) => {
 
   useEffect(() => {
     if (part) {
-      setFormData(part);
+      setFormData({
+        name: part.name || '',
+        inStock: part.inStock || part.stock || '',
+        machineId: part.machineId || '',
+      });
     } else {
-      setFormData({ name: '', inStock: '', machineId: machines[0]?.id || '' });
+      setFormData({ 
+        name: '', 
+        inStock: '', 
+        machineId: machines && machines.length > 0 ? machines[0].id : '' 
+      });
     }
   }, [part, machines]);
+
+  // Debug logging
+  console.log('PartForm Debug:', {
+    part: part,
+    machinesCount: machines?.length || 0,
+    machines: machines?.slice(0, 3), // First 3 machines for debugging
+    formData: formData
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,6 +64,7 @@ const PartForm = ({ onSubmit, part, machines }) => {
           value={formData.inStock}
           onChange={handleChange}
           required
+          min="0"
         />
       </div>
       <div className="form-group">
@@ -57,9 +74,13 @@ const PartForm = ({ onSubmit, part, machines }) => {
           name="machineId"
           value={formData.machineId}
           onChange={handleChange}
+          required
         >
-          {machines.map(machine => (
-            <option key={machine.id} value={machine.id}>{machine.name}</option>
+          <option value="">Select a machine</option>
+          {machines && machines.map(machine => (
+            <option key={machine.id} value={machine.id}>
+              {machine.name || machine.machineName || `Machine ${machine.id}`}
+            </option>
           ))}
         </select>
       </div>

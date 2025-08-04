@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Widget from '../Widget';
 import { FiClipboard, FiCheckCircle, FiClock, FiTrendingUp, FiTarget, FiAward, FiCalendar, FiAlertTriangle, FiBarChart, FiActivity, FiUser, FiUsers } from 'react-icons/fi';
 
-const EmployeeDashboard = () => {
+const EmployeeDashboard = ({ userData }) => {
   const [stats, setStats] = useState({
     assignedTasks: 5,
     completedTasks: 3,
@@ -94,7 +94,7 @@ const EmployeeDashboard = () => {
   return (
     <div className="dashboard-grid">
       {/* Personal Overview */}
-      <Widget className="widget-primary" title="My Tasks">
+      <Widget className="widget-primary" title={`Welcome, ${userData?.fullName || 'Employee'}!`}>
         <div className="widget-stats">
           <div className="widget-stat">
             <span className="stat-value">{stats.completedTasks}</span>
@@ -112,6 +112,9 @@ const EmployeeDashboard = () => {
               style={{ width: `${(stats.completedTasks / stats.assignedTasks) * 100}%` }}
             ></div>
           </div>
+        </div>
+        <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+          Department: {userData?.department || 'General'}
         </div>
       </Widget>
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Widget from '../Widget';
-import { FiTrendingUp, FiTrendingDown, FiUsers, FiPackage, FiClipboard, FiAlertTriangle, FiCheckCircle, FiClock, FiDollarSign, FiBarChart, FiActivity } from 'react-icons/fi';
+import { FiTrendingUp, FiTrendingDown, FiUsers, FiPackage, FiClipboard, FiAlertTriangle, FiCheckCircle, FiClock, FiDollarSign, FiBarChart, FiActivity, FiSettings, FiTruck, FiBox, FiThermometer, FiRotateCcw } from 'react-icons/fi';
 
-const AdminDashboard = () => {
+const AdminDashboard = ({ userData }) => {
   const [stats, setStats] = useState({
     activeTasks: 12,
     completedTasks: 45,
@@ -16,6 +16,16 @@ const AdminDashboard = () => {
     monthlyExpenses: 89000,
     efficiency: 87,
     uptime: 94.5
+  });
+
+  // Plant-specific maintenance counts
+  const [plantStats, setPlantStats] = useState({
+    batching: 3,
+    mixing: 2,
+    conveying: 5,
+    packing: 4,
+    heating: 1,
+    milling: 2
   });
 
   const [recentActivity, setRecentActivity] = useState([
@@ -33,6 +43,16 @@ const AdminDashboard = () => {
     { id: 'M004', name: 'Packaging Line D', status: 'operational', efficiency: 95, lastMaintenance: '2024-01-12' },
     { id: 'M005', name: 'Storage System E', status: 'offline', efficiency: 0, lastMaintenance: '2024-01-08' }
   ]);
+
+  // Plant categories with icons
+  const plantCategories = [
+    { id: 'batching', name: 'Batching', icon: <FiPackage />, color: '#3b82f6' },
+    { id: 'mixing', name: 'Mixing', icon: <FiRotateCcw />, color: '#10b981' },
+    { id: 'conveying', name: 'Conveying', icon: <FiTruck />, color: '#f59e0b' },
+    { id: 'packing', name: 'Packing', icon: <FiBox />, color: '#8b5cf6' },
+    { id: 'heating', name: 'Heating', icon: <FiThermometer />, color: '#ef4444' },
+    { id: 'milling', name: 'Milling', icon: <FiSettings />, color: '#6b7280' }
+  ];
 
   // Simulate real-time updates
   useEffect(() => {
@@ -76,8 +96,24 @@ const AdminDashboard = () => {
 
   return (
     <div className="dashboard-grid">
+      {/* Maintenance Overview Cards - Similar to client images */}
+      <div className="maintenance-overview">
+        {plantCategories.map((plant) => (
+          <Widget key={plant.id} className="plant-card" title={plant.name}>
+            <div className="plant-card-content">
+              <div className="plant-icon" style={{ color: plant.color }}>
+                {plant.icon}
+              </div>
+              <div className="plant-count">
+                {plantStats[plant.id] || 0}
+              </div>
+            </div>
+          </Widget>
+        ))}
+      </div>
+
       {/* Key Metrics Row */}
-      <Widget className="widget-primary" title="Active Tasks">
+      <Widget className="widget-primary" title={`System Overview - ${userData?.fullName || 'Administrator'}`}>
         <div className="widget-stats">
           <div className="widget-stat">
             <span className="stat-value">{stats.activeTasks}</span>
@@ -95,6 +131,9 @@ const AdminDashboard = () => {
               style={{ width: `${(stats.completedTasks / (stats.activeTasks + stats.completedTasks)) * 100}%` }}
             ></div>
           </div>
+        </div>
+        <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+          Complete system administration and monitoring
         </div>
       </Widget>
 

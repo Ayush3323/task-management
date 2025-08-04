@@ -6,7 +6,7 @@ import MachineList from '../components/MachineList';
 import Modal from '../components/Modal';
 import MachineForm from '../components/MachineForm';
 
-const Machines = ({ machines, setMachines }) => {
+const Machines = ({ machines, setMachines, userData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMachine, setSelectedMachine] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -50,17 +50,18 @@ const Machines = ({ machines, setMachines }) => {
 
   const handleFormSubmit = async (formData) => {
     try {
+      const machineData = {
+        ...formData,
+        updatedAt: new Date().toISOString(),
+        updatedBy: userData?.uid || 'system'
+      };
+
       if (selectedMachine) {
-        await updateDocument('machines', selectedMachine.id, {
-          ...formData,
-          updatedAt: new Date().toISOString()
-        });
+        await updateDocument('machines', selectedMachine.id, machineData);
       } else {
-        await addDocument('machines', {
-          ...formData,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        });
+        machineData.createdAt = new Date().toISOString();
+        machineData.createdBy = userData?.uid || 'system';
+        await addDocument('machines', machineData);
       }
       handleCloseModal();
     } catch (error) {
@@ -175,6 +176,7 @@ const Machines = ({ machines, setMachines }) => {
           <MachineForm 
             onSubmit={handleFormSubmit} 
             machine={selectedMachine}
+            userData={userData}
           />
         </Modal>
       )}

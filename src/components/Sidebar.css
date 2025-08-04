@@ -49,14 +49,43 @@
 
 /* Sidebar Header */
 .sidebar-header {
-  margin-bottom: 3rem;
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.logo svg {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.role-badge {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .sidebar-header .logo {
   display: flex;
   align-items: center;
-  font-size: 1.75rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);
   text-decoration: none;
@@ -97,6 +126,47 @@
 }
 
 /* Navigation */
+/* User Info */
+.user-info {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 1rem;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+}
+
+.user-details h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.user-role {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.user-department {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
 .sidebar-nav {
   list-style: none;
   padding: 0;
@@ -358,4 +428,27 @@
 .theme-switcher select:focus {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  padding: 0.75rem;
+  border-radius: 8px;
+  transition: all var(--transition-normal) var(--ease-smooth);
+  font-weight: 500;
+  font-size: 0.9rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  transform: translateX(4px);
 }

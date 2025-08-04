@@ -489,7 +489,7 @@
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: white;
+  /* color: white; */
   text-align: center;
   min-width: 60px;
 }

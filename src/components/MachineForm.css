@@ -1,41 +1,191 @@
-.machine-form .form-group {
-  margin-bottom: 1.5rem;
+.machine-form {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--surface-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
 }
 
-.machine-form label {
+.machine-form h2 {
+  color: var(--text-primary);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 1rem;
+}
+
+.form-section {
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+}
+
+.form-section h3 {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #4a5568;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
 }
 
-.machine-form input,
-.machine-form select {
+.form-group input,
+.form-group select,
+.form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #cbd5e0;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  background: var(--surface-color);
+  color: var(--text-primary);
+  transition: all 0.2s ease;
 }
 
-.machine-form .form-actions {
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-light);
 }
 
-.machine-form .submit-button {
-  background-color: var(--primary-color);
-  color: #ffffff;
+.submit-button {
+  background: var(--gradient-primary);
+  color: white;
   border: none;
+  padding: 1rem 2rem;
   border-radius: 8px;
-  padding: 0.75rem 1.5rem;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  min-width: 200px;
 }
 
-.machine-form .submit-button:hover {
-  background-color: #357abd;
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.submit-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .machine-form {
+    padding: 1rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .form-section {
+    padding: 1rem;
+  }
+  
+  .machine-form h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .form-section {
+    background: rgba(30, 41, 59, 0.5);
+    border-color: var(--border-color);
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+  }
+}
+
+/* Required field indicator */
+.form-group label[for*="name"]::after,
+.form-group label[for*="type"]::after,
+.form-group label[for*="status"]::after,
+.form-group label[for*="location"]::after {
+  content: " *";
+  color: #ef4444;
+  font-weight: 700;
+}
+
+/* Section icons (optional enhancement) */
+.form-section h3::before {
+  content: "🏭 ";
+  margin-right: 0.5rem;
+}
+
+.form-section:nth-child(2) h3::before {
+  content: "ℹ️ ";
+}
+
+.form-section:nth-child(3) h3::before {
+  content: "⚙️ ";
+}
+
+.form-section:nth-child(4) h3::before {
+  content: "🔧 ";
+}
+
+.form-section:nth-child(5) h3::before {
+  content: "📊 ";
+}
+
+.form-section:nth-child(6) h3::before {
+  content: "📞 ";
+}
+
+.form-section:nth-child(7) h3::before {
+  content: "📝 ";
 }

@@ -443,3 +443,84 @@
 .widget-list li:last-child {
   border-bottom: none;
 }
+
+/* Maintenance Overview Cards */
+.maintenance-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.plant-card {
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.plant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
+}
+
+.plant-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.plant-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.plant-count {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.plant-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive design for maintenance overview */
+@media (max-width: 1200px) {
+  .maintenance-overview {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .maintenance-overview {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  
+  .plant-card {
+    padding: 1rem;
+  }
+  
+  .plant-icon {
+    font-size: 2rem;
+  }
+  
+  .plant-count {
+    font-size: 1.5rem;
+  }
+  
+  .plant-card h3 {
+    font-size: 0.9rem;
+  }
+}

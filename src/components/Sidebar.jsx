@@ -2,21 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { themes } from '../themes';
 import './Sidebar.css';
-import { FiGrid, FiSettings, FiUsers, FiClipboard, FiPackage, FiLogOut } from 'react-icons/fi';
+import { FiGrid, FiSettings, FiUsers, FiClipboard, FiPackage, FiLogOut, FiUser, FiBarChart, FiTarget, FiActivity } from 'react-icons/fi';
+import { useAuth } from '../contexts/AuthContext';
 
-const Sidebar = ({ setRole }) => {
+const Sidebar = ({ userData }) => {
+  const { logout, canManageMachines, canManageParts, canManageTasks, canManageEmployees } = useAuth();
   const [currentTheme, setCurrentTheme] = useState('default');
-  const [currentRole, setCurrentRole] = useState('Admin');
-
-  const handleRoleChange = (e) => {
-    const newRole = e.target.value;
-    setCurrentRole(newRole);
-    setRole(newRole);
-  };
 
   const handleThemeChange = (e) => {
     const newTheme = e.target.value;
     setCurrentTheme(newTheme);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   useEffect(() => {
@@ -25,22 +28,81 @@ const Sidebar = ({ setRole }) => {
       document.documentElement.style.setProperty(key, value);
     }
   }, [currentTheme]);
+
+  // Role-specific navigation items
+  const getNavigationItems = () => {
+    const baseItems = [
+      { to: "/", icon: <FiGrid />, label: "Dashboard" }
+    ];
+
+    switch (userData?.role) {
+      case 'Admin':
+        return [
+          ...baseItems,
+          { to: "/machines", icon: <FiPackage />, label: "Machines", show: canManageMachines() },
+          { to: "/parts", icon: <FiSettings />, label: "Parts", show: canManageParts() },
+          { to: "/tasks", icon: <FiClipboard />, label: "Tasks", show: canManageTasks() },
+          { to: "/employees", icon: <FiUsers />, label: "Employees", show: canManageEmployees() }
+        ];
+      
+      case 'Manager':
+        return [
+          ...baseItems,
+          { to: "/tasks", icon: <FiClipboard />, label: "Tasks", show: canManageTasks() },
+          { to: "/employees", icon: <FiUsers />, label: "Team", show: canManageEmployees() },
+          { to: "/machines", icon: <FiPackage />, label: "Machines", show: canManageMachines() }
+        ];
+      
+      case 'Employee':
+        return [
+          ...baseItems,
+          { to: "/tasks", icon: <FiClipboard />, label: "My Tasks", show: canManageTasks() }
+        ];
+      
+      default:
+        return baseItems;
+    }
+  };
+
+  const navigationItems = getNavigationItems();
+
   return (
     <nav className="sidebar">
       <div className="sidebar-header">
         <div className="logo">
           <FiSettings />
-          <span>CRM</span>
+          <span>Task Management</span>
         </div>
       </div>
+
+      {/* User Info */}
+      {userData && (
+        <div className="user-info">
+          <div className="user-avatar">
+            <FiUser />
+          </div>
+          <div className="user-details">
+            <h4>{userData.fullName}</h4>
+            <span className="user-role">{userData.role}</span>
+            <span className="user-department">{userData.department}</span>
+          </div>
+        </div>
+      )}
+
       <ul className="sidebar-nav">
-        <li><NavLink to="/"><FiGrid /><span>Dashboard</span></NavLink></li>
-                <li><NavLink to="/machines"><FiPackage /><span>Machines</span></NavLink></li>
-        <li><NavLink to="/parts"><FiSettings /><span>Parts</span></NavLink></li>
-        <li><NavLink to="/tasks"><FiClipboard /><span>Tasks</span></NavLink></li>
-        <li><NavLink to="/employees"><FiUsers /><span>Employees</span></NavLink></li>
+        {navigationItems.map((item, index) => (
+          item.show !== false && (
+            <li key={index}>
+              <NavLink to={item.to}>
+                {item.icon}
+                <span>{item.label}</span>
+              </NavLink>
+            </li>
+          )
+        ))}
       </ul>
-            <div className="sidebar-footer">
+
+      <div className="sidebar-footer">
         <div className="theme-switcher">
           <select value={currentTheme} onChange={handleThemeChange}>
             <option value="default">Default</option>
@@ -49,14 +111,10 @@ const Sidebar = ({ setRole }) => {
           </select>
         </div>
 
-        <div className="role-switcher">
-          <select value={currentRole} onChange={handleRoleChange}>
-            <option value="Admin">Admin</option>
-            <option value="Manager">Manager</option>
-            <option value="Employee">Employee</option>
-          </select>
-        </div>
-        <a href="#"><FiLogOut /><span>Logout</span></a>
+        <button onClick={handleLogout} className="logout-btn">
+          <FiLogOut />
+          <span>Logout</span>
+        </button>
       </div>
     </nav>
   );

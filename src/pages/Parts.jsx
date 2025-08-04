@@ -75,6 +75,15 @@ const Parts = ({ parts, setParts, machines }) => {
   const lowStockParts = parts?.filter(p => (p.inStock || p.stock || 0) <= 5).length || 0;
   const outOfStockParts = parts?.filter(p => (p.inStock || p.stock || 0) === 0).length || 0;
 
+  // Debug logging
+  console.log('Parts Page Debug:', {
+    partsCount: parts?.length || 0,
+    machinesCount: machines?.length || 0,
+    sampleParts: parts?.slice(0, 3), // First 3 parts for debugging
+    sampleMachines: machines?.slice(0, 3), // First 3 machines for debugging
+    partsWithMachineIds: parts?.filter(p => p.machineId)?.length || 0
+  });
+
   if (loading) {
     return (
       <div className="parts-page">

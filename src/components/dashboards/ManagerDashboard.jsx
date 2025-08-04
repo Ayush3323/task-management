@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Widget from '../Widget';
 import { FiUsers, FiClipboard, FiPackage, FiTrendingUp, FiTrendingDown, FiCheckCircle, FiClock, FiAlertTriangle, FiBarChart, FiDollarSign, FiTarget, FiActivity } from 'react-icons/fi';
 
-const ManagerDashboard = () => {
+const ManagerDashboard = ({ userData }) => {
   const [stats, setStats] = useState({
     teamSize: 8,
     activeTeamMembers: 7,
@@ -77,7 +77,7 @@ const ManagerDashboard = () => {
   return (
     <div className="dashboard-grid">
       {/* Team Overview */}
-      <Widget className="widget-primary" title="Team Overview">
+      <Widget className="widget-primary" title={`Team Management - ${userData?.fullName || 'Manager'}`}>
         <div className="widget-stats">
           <div className="widget-stat">
             <span className="stat-value">{stats.teamSize}</span>
@@ -95,6 +95,9 @@ const ManagerDashboard = () => {
               style={{ width: `${(stats.activeTeamMembers / stats.teamSize) * 100}%` }}
             ></div>
           </div>
+        </div>
+        <div style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+          Department: {userData?.department || 'Management'}
         </div>
       </Widget>
 
