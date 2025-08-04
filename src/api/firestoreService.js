@@ -1,5 +1,13 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, getDoc, setDoc, query, where, getDocs } from 'firebase/firestore';
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged,
+  updateProfile 
+} from 'firebase/auth';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,6 +23,114 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+
+// Authentication Functions
+export const createUser = async (email, password, userData) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    
+    // Update user profile with display name
+    await updateProfile(user, {
+      displayName: userData.fullName
+    });
+    
+    // Store additional user data in Firestore
+    await setDoc(doc(db, 'users', user.uid), {
+      ...userData,
+      uid: user.uid,
+      email: user.email,
+      createdAt: new Date().toISOString(),
+      createdBy: auth.currentUser?.uid || 'system'
+    });
+    
+    return user;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const signInUser = async (email, password) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const signOutUser = async () => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getCurrentUser = () => {
+  return auth.currentUser;
+};
+
+export const onAuthStateChange = (callback) => {
+  return onAuthStateChanged(auth, callback);
+};
+
+export const getUserData = async (uid) => {
+  try {
+    const userDoc = await getDoc(doc(db, 'users', uid));
+    if (userDoc.exists()) {
+      return { id: userDoc.id, ...userDoc.data() };
+    }
+    // Throw a specific error when document doesn't exist
+    const error = new Error('User document not found');
+    error.code = 'not-found';
+    throw error;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getUsersByRole = async (role) => {
+  try {
+    const q = query(collection(db, 'users'), where('role', '==', role));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  } catch (error) {
+    console.error(`Error fetching users with role ${role}:`, error);
+    return [];
+  }
+};
+
+export const getAllUsers = async () => {
+  try {
+    const q = query(collection(db, 'users'));
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  } catch (error) {
+    console.error('Error fetching all users:', error);
+    return [];
+  }
+};
+
+export const updateUserRole = async (uid, newRole, permissions = {}) => {
+  try {
+    await updateDoc(doc(db, 'users', uid), {
+      role: newRole,
+      permissions: permissions,
+      updatedAt: new Date().toISOString(),
+      updatedBy: auth.currentUser?.uid
+    });
+  } catch (error) {
+    throw error;
+  }
+};
 
 /**
  * Sets up a real-time listener for a Firestore collection.
